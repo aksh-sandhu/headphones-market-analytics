@@ -1,0 +1,138 @@
+from database.connection import DB
+import pandas as pd
+
+class query(DB):
+
+
+  def product_count(self):
+
+    self.mycursor.execute("""
+    SELECT COUNT(*) FROM headphones_aksh.headphones
+    """)
+    data = self.mycursor.fetchone()
+    return data[0]
+
+  def avg_price(self):
+
+    self.mycursor.execute("""
+    SELECT ROUND(AVG(price),2) FROM headphones_aksh.headphones
+    """)
+    data = self.mycursor.fetchone()
+    return data[0]
+
+  def avg_rating(self):
+
+    self.mycursor.execute("""
+    SELECT ROUND(AVG(stars),2) FROM headphones_aksh.headphones
+    """)
+    data = self.mycursor.fetchone()
+    return data[0]
+
+
+  def total_company(self):
+
+    self.mycursor.execute("""
+    SELECT COUNT(*) FROM (SELECT DISTINCT company FROM headphones_aksh.headphones) t1
+    """)
+    data = self.mycursor.fetchone()
+    return data[0]
+
+  def wireless_percent(self):
+
+    self.mycursor.execute("""
+    WITH wireless AS(SELECT COUNT(*) AS wireless_count FROM headphones_aksh.headphones WHERE connectivity = 'wireless'),
+    total AS (SELECT COUNT(*) AS total FROM headphones_aksh.headphones WHERE connectivity IS NOT NULL)
+    SELECT ROUND((w1.wireless_count / t.total*100),2)
+
+    FROM wireless w1
+    JOIN total t
+    """)
+
+    data = self.mycursor.fetchone()
+    return data[0]
+
+
+  def wired_percent(self):
+    self.mycursor.execute("""
+    WITH wired AS(SELECT COUNT(*) AS wired_count FROM headphones_aksh.headphones WHERE connectivity = 'wired'),
+    total AS (SELECT COUNT(*) AS total FROM headphones_aksh.headphones WHERE connectivity IS NOT NULL)
+    SELECT ROUND((w1.wired_count / t.total*100),2)
+
+    FROM wired w1
+    JOIN total t
+    """)
+
+    data = self.mycursor.fetchone()
+    return data[0]
+
+
+  def top_count_company(self):
+    company,count=[],[]
+
+    self.mycursor.execute("""
+    SELECT company,COUNT(*) FROM headphones_aksh.headphones
+    GROUP BY company
+    ORDER BY COUNT(*) DESC LIMIT 20
+    """)
+
+    data = self.mycursor.fetchall()
+    for i in data:
+      company.append(i[0])
+      count.append(i[1])
+
+    return company,count
+
+
+  def price_tier(self):
+    tier,count = [],[]
+    self.mycursor.execute("""
+    SELECT price_tier,COUNT(*) FROM headphones_aksh.headphones
+    GROUP BY price_tier
+    """)
+
+    data = self.mycursor.fetchall()
+
+    for i in data:
+      tier.append(i[0])
+      count.append(i[1])
+
+    return tier,count
+
+
+  def top_avg_price(self):
+    company,avg_price=[],[]
+
+    self.mycursor.execute("""
+    SELECT company,ROUND(AVG(price),2) FROM headphones_aksh.headphones
+    GROUP BY company
+    ORDER BY ROUND(AVG(price)) DESC LIMIT 15
+    """)
+
+    data = self.mycursor.fetchall()
+
+    for i in data:
+      company.append(i[0])
+      avg_price.append(i[1])
+
+    return company,avg_price
+
+  ## About dataset
+
+  def data_overview(self):
+
+    self.mycursor.execute("""
+    SELECT * FROM headphones_aksh.headphones LIMIT 10
+    """)
+    data = self.mycursor.fetchall()
+    columns = [col[0] for col in self.mycursor.description]
+    return pd.DataFrame(data, columns=columns)
+
+  def button_pressed(self):
+    self.mycursor.execute("""
+    SELECT * FROM headphones_aksh.headphones
+    ORDER BY RAND() LIMIT 10
+    """)
+    data = self.mycursor.fetchall()
+    columns = [col[0] for col in self.mycursor.description]
+    return pd.DataFrame(data, columns=columns)
+
