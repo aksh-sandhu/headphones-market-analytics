@@ -3,6 +3,7 @@ import pandas as pd
 
 class query(DB):
 
+# overview page queries
 
   def product_count(self):
 
@@ -116,12 +117,69 @@ class query(DB):
 
     return company,avg_price
 
-  ## About dataset
+# market_insights page queries
+
+  def price_distribution_budget(self):
+    price = []
+    self.mycursor.execute("""
+    SELECT price FROM headphones_aksh.headphones
+    WHERE price IS NOT NULL AND price_tier = 'budget'
+    """)
+
+    data = self.mycursor.fetchall()
+
+    for i in data:
+      price.append(i[0])
+
+    return price
+
+  def price_distribution_mid(self):
+    price = []
+    self.mycursor.execute("""
+    SELECT price FROM headphones_aksh.headphones
+    WHERE price IS NOT NULL AND price_tier = 'mid range'
+    """)
+
+    data = self.mycursor.fetchall()
+
+    for i in data:
+      price.append(i[0])
+
+    return price
+
+
+  def price_distribution_premium(self):
+    price = []
+    self.mycursor.execute("""
+    SELECT price FROM headphones_aksh.headphones
+    WHERE price IS NOT NULL AND price_tier = 'premium'
+    """)
+    data = self.mycursor.fetchall()
+    for i in data:
+      price.append(i[0])
+    return price
+
+  def price_distribution_luxury(self):
+    price = []
+    self.mycursor.execute("""
+    SELECT price FROM headphones_aksh.headphones
+    WHERE price IS NOT NULL AND price_tier = 'luxury'
+    """)
+    data = self.mycursor.fetchall()
+    for i in data:
+      price.append(i[0])
+    return price
+
+
+
+
+
+# About dataset page queries
 
   def data_overview(self):
 
     self.mycursor.execute("""
-    SELECT * FROM headphones_aksh.headphones LIMIT 10
+    SELECT * FROM headphones_aksh.headphones LIMIT 5
     """)
     data = self.mycursor.fetchall()
     columns = [col[0] for col in self.mycursor.description]
@@ -130,7 +188,7 @@ class query(DB):
   def button_pressed(self):
     self.mycursor.execute("""
     SELECT * FROM headphones_aksh.headphones
-    ORDER BY RAND() LIMIT 10
+    ORDER BY RAND() LIMIT 5
     """)
     data = self.mycursor.fetchall()
     columns = [col[0] for col in self.mycursor.description]
