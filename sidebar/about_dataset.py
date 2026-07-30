@@ -1,7 +1,7 @@
 import streamlit as st
-from database.queries import query
+from database.queries import about_dataset_query
 import pandas as pd
-data = query()
+about_dataset_query = about_dataset_query()
 
 
 
@@ -10,11 +10,11 @@ def show():
 
    sample = st.empty()
 
-   sample.dataframe(data.data_overview())
+   sample.dataframe(about_dataset_query.data_overview())
 
    if st.button("Random Sample"):
-        sample.dataframe(data.button_pressed())
+        sample.dataframe(about_dataset_query.button_pressed())
 
 
-  
+
 

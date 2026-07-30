@@ -1,5 +1,5 @@
 import streamlit as st
-import utils.charts as charts
+import utils.market_insights_charts as charts
 
 
 def show():

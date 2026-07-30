@@ -1,7 +1,7 @@
 from database.connection import DB
 import pandas as pd
 
-class query(DB):
+class overview_query(DB):
 
 # overview page queries
 
@@ -119,6 +119,8 @@ class query(DB):
 
 # market_insights page queries
 
+class market_insights_query(DB):
+
   def price_distribution_budget(self):
     price = []
     self.mycursor.execute("""
@@ -171,10 +173,49 @@ class query(DB):
     return price
 
 
+# Brand Analysis
+
+class brand_analysis_query(DB):
+
+  def total_brands(self):
+    self.mycursor.execute('SELECT COUNT(DISTINCT company) FROM headphones_aksh.headphones')
+    data = self.mycursor.fetchone()
+    return data[0]
+
+  def largest_brand(self):
+
+    self.mycursor.execute('''
+    SELECT company, COUNT(*) AS 'count'
+    FROM headphones_aksh.headphones
+    GROUP BY company
+    ORDER BY COUNT(*) DESC LIMIT 1
+    ''')
+    data = self.mycursor.fetchall()
+    name = data[0][0]
+    count = data[0][1]
+
+    return name,count
+
+  def most_expensive_brand(self):
+
+    self.mycursor.execute('''
+    SELECT company, ROUND(AVG(price),2) AS average_price FROM headphones_aksh.headphones
+    GROUP BY company
+    ORDER BY ROUND(AVG(price),2) DESC LIMIT 1
+    ''')
+
+    data = self.mycursor.fetchall()
+    name = data[0][0]
+    price = data[0][1]
+
+    return name,price
+
+
 
 
 
 # About dataset page queries
+class about_dataset_query(DB):
 
   def data_overview(self):
 

@@ -1,14 +1,14 @@
 import streamlit as st
 from database.connection import DB
-from database.queries import query
-import utils.charts as charts
+from database.queries import overview_query
+import utils.overview_charts as charts
 
 st.set_page_config(
   layout = 'wide'
 )
 
 db = DB()
-query = query()
+overview_query = overview_query()
 
 def show():
 
@@ -19,21 +19,21 @@ def show():
 
     with products:
       st.write('Total Products')
-      product_count = query.product_count()
+      product_count = overview_query.product_count()
       st.write(product_count)
 
     with avg_price:
-      avg_price = query.avg_price()
+      avg_price = overview_query.avg_price()
       st.write('Avg Price')
       st.write(f"₹ {avg_price:,.0f}")
 
     with avg_rating:
-      avg_rating = query.avg_rating()
+      avg_rating = overview_query.avg_rating()
       st.write('Avg Rating')
       st.write(avg_rating)
 
     with brands:
-      brands = query.total_company()
+      brands = overview_query.total_company()
       st.write('Brands')
       st.write(brands)
 
