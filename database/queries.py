@@ -302,6 +302,25 @@ class brand_analysis_query(DB):
     return data[0][0],data[0][1],data[0][2],data[0][3]
 
 
+  def type_check_query(self,user_option):
+    self.mycursor.execute(f'''
+    SELECT
+    COUNT(CASE WHEN type = 'Tws Earbuds' THEN 1 END) AS tws_earbuds,
+        COUNT(CASE WHEN type = 'Neckband' THEN 1 END) AS neckband,
+        COUNT(CASE WHEN type = 'Earphone' THEN 1 END) AS earphone,
+        COUNT(CASE WHEN type = 'Headphone' THEN 1 END) AS headphone,
+        COUNT(CASE WHEN type = 'Headset' THEN 1 END) AS headset,
+        COUNT(CASE WHEN type = 'Bone Conduction' THEN 1 END) AS bone_conduction
+    FROM headphones_aksh.headphones
+    WHERE company = '{user_option}'
+    ''')
+
+    data = self.mycursor.fetchall()
+
+    return data[0][0],data[0][1],data[0][2],data[0][3],data[0][4],data[0][5]
+
+
+
 
 
 

@@ -79,10 +79,13 @@ def show():
 
 
 
-    microphone, fit_type = st.columns(2,border=True)
+    type_check, fit_type = st.columns(2,border=True)
 
-    with microphone:
-      pass
+    with type_check:
+      # brand_analysis_query.microphone_check(user_option)
+      fig = charts.type_check_chart(user_option)
+      st.header('Type Percentage',text_alignment='center')
+      st.plotly_chart(fig)
 
     with fit_type :
       pass

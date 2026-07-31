@@ -24,3 +24,34 @@ def top_company_count_chart():
   )
 
   return fig
+
+def type_check_chart(user_option):
+
+  tws_earbuds, neckband, earphone, headphone, headset, bone_conduction = query.type_check_query(user_option)
+
+  fig = go.Figure(
+    go.Pie(
+        labels=[
+            'TWS Earbuds',
+            'Neckband',
+            'Earphone',
+            'Headphone',
+            'Headset',
+            'Bone Conduction'
+        ],
+        values=[
+            tws_earbuds,
+            neckband,
+            earphone,
+            headphone,
+            headset,
+            bone_conduction
+        ],
+        hole=0.5,
+        hoverinfo='label+value+percent'
+    )
+)
+
+  return fig
+
+
