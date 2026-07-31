@@ -29,6 +29,64 @@ def show():
 
 
     with highest_rated_brand:
+      st.write('Higest Rated Brand')
+      company,star = brand_analysis_query.highest_rated()
+      st.write(company,star,'⭐')
+
+
+  top_count_fig = charts.top_company_count_chart()
+  st.header('Top 15 Companies By Most Products',text_alignment='center')
+  st.plotly_chart(top_count_fig)
+
+  brand_list = brand_analysis_query.brand_list()
+  user_option = st.selectbox('Choose Brand',brand_list)
+
+  with st.container():
+
+    product_count, connectivity, price_tiers = st.columns(3,border=True)
+
+    with product_count:
+      count_product = brand_analysis_query.selected_brand_count(user_option)
+      st.header('Total Products',text_alignment='center')
+      st.header(count_product,text_alignment='center')
+
+
+    with connectivity:
+      st.header('Connectivity Count',text_alignment='center')
+      wireless,wired = brand_analysis_query.wireless_wired_count(user_option)
+      wired_col,wireless_col = st.columns(2)
+      with wired_col:
+        st.write(f'Wirless Products: {wireless}')
+      with wireless_col:
+        st.write(f'Wired Products: {wired}')
+
+
+    with price_tiers:
+      budget,mid,premium,luxury = brand_analysis_query.price_tier_count(user_option)
+      st.header('Price Tier Count',text_alignment='center')
+
+      budget_cont,mid_cont = st.columns(2)
+      with budget_cont:
+        st.write(f'Budget Products: {budget}')
+      with mid_cont:
+        st.write(f'Mid Range Products: {mid}')
+
+      premium_cont,luxury_cont = st.columns(2)
+      with premium_cont:
+        st.write(f'Premium Products: {premium}')
+      with luxury_cont:
+        st.write(f'Luxury Products: {luxury}')
+
+
+
+    microphone, fit_type = st.columns(2,border=True)
+
+    with microphone:
       pass
+
+    with fit_type :
+      pass
+
+
 
 

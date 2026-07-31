@@ -101,10 +101,10 @@ class overview_query(DB):
 
 
   def top_avg_price(self):
-    company,avg_price=[],[]
+    company,avg_price,count =[],[],[]
 
     self.mycursor.execute("""
-    SELECT company,ROUND(AVG(price),2) FROM headphones_aksh.headphones
+    SELECT company,ROUND(AVG(price),2), COUNT(*) FROM headphones_aksh.headphones
     GROUP BY company
     ORDER BY ROUND(AVG(price)) DESC LIMIT 15
     """)
@@ -114,8 +114,9 @@ class overview_query(DB):
     for i in data:
       company.append(i[0])
       avg_price.append(i[1])
+      count.append(i[2])
 
-    return company,avg_price
+    return company,avg_price,count
 
 # market_insights page queries
 
@@ -201,6 +202,7 @@ class brand_analysis_query(DB):
     self.mycursor.execute('''
     SELECT company, ROUND(AVG(price),2) AS average_price FROM headphones_aksh.headphones
     GROUP BY company
+    HAVING COUNT(*) > 10
     ORDER BY ROUND(AVG(price),2) DESC LIMIT 1
     ''')
 
@@ -210,11 +212,104 @@ class brand_analysis_query(DB):
 
     return name,price
 
+  def highest_rated(self):
+
+    self.mycursor.execute('''
+    SELECT company , ROUND(AVG(stars),2) FROM headphones_aksh.headphones
+    GROUP BY company
+    HAVING COUNT(*) > 20
+    ORDER BY ROUND(AVG(stars),2) DESC LIMIT 1
+    ''')
+
+    data = self.mycursor.fetchall()
+    company = data[0][0]
+    star = data[0][1]
+
+    return company,star
+
+
+  def top_products(self):
+
+    self.mycursor.execute('''
+    SELECT company,COUNT(*) FROM headphones_aksh.headphones
+    GROUP BY company
+    ORDER BY COUNT(*) DESC LIMIT 15
+    ''')
+    company,count = [],[]
+    data = self.mycursor.fetchall()
+
+    for i in data:
+      company.append(i[0])
+      count.append(i[1])
+
+    return company,count
+
+  def brand_list(self):
+    brands = []
+    self.mycursor.execute('''
+    SELECT DISTINCT company FROM headphones_aksh.headphones
+    ''')
+
+    data = self.mycursor.fetchall()
+
+    for i in data:
+      brands.append(i[0])
+
+    return brands
+
+  def selected_brand_count(self,user_option):
+    self.mycursor.execute(f'''
+    SELECT COUNT(*) FROM headphones_aksh.headphones
+    WHERE company = '{user_option}'
+    GROUP BY company
+    ''')
+
+    data = self.mycursor.fetchone()
+    return data[0]
+
+  def wireless_wired_count(self,user_option):
+
+
+
+    self.mycursor.execute(f'''
+    SELECT
+    COUNT(CASE WHEN connectivity = 'Wireless' THEN 1 END) AS wireless,
+    COUNT(CASE WHEN connectivity = 'Wired' THEN 1 END) AS wired
+    FROM headphones_aksh.headphones
+    WHERE company = '{user_option}'
+    ''')
+
+    data = self.mycursor.fetchall()
+
+    return data[0][0],data[0][1]
+
+  def price_tier_count(self,user_option):
+
+    self.mycursor.execute(f'''
+    SELECT
+    COUNT(CASE WHEN price_tier = 'Budget' THEN 1 END) AS budget,
+    COUNT(CASE WHEN price_tier = 'Mid Range' THEN 1 END) AS Mid_Range,
+    COUNT(CASE WHEN price_tier = 'Premium' THEN 1 END) AS Premium,
+    COUNT(CASE WHEN price_tier = 'Luxury' THEN 1 END) AS Luxury
+
+    FROM headphones_aksh.headphones
+    WHERE company = '{user_option}'
+    GROUP BY company
+    ''')
+
+    data = self.mycursor.fetchall()
+
+    return data[0][0],data[0][1],data[0][2],data[0][3]
+
+
+
+
 
 
 
 
 # About dataset page queries
+
 class about_dataset_query(DB):
 
   def data_overview(self):

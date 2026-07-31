@@ -50,13 +50,18 @@ def price_tier_chart():
     return fig
 
 def top_avg_price_chart():
-   company,avg_price = overview_query.top_avg_price()
+   company,avg_price,count = overview_query.top_avg_price()
    fig = go.Figure(
      go.Bar(
        x = company,
        y = avg_price,
        text = avg_price,
-       textposition = 'inside'
+       textposition = 'inside',
+       customdata = count,
+       hovertemplate=
+                "<b>%{x}</b><br>"
+                "Average Price: ₹%{y:,.0f}<br>"
+                "Products: %{customdata}<extra></extra>"
      )
    )
    fig.update_layout(
