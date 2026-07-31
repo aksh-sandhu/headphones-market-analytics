@@ -54,4 +54,25 @@ def type_check_chart(user_option):
 
   return fig
 
+def fit_type_chart(user_option):
+
+  in_the_ear, over_the_ear, on_the_ear, open_ear = query.fit_type_query(user_option)
+  counts = [in_the_ear, over_the_ear, on_the_ear, open_ear]
+  fig = go.Figure(
+    go.Bar(
+      x = ['in the ear', 'over the ear', 'on the ear', 'open ear'],
+      y = [in_the_ear, over_the_ear, on_the_ear, open_ear],
+      text = counts,
+      textposition = 'inside'
+    )
+  )
+
+  fig.update_layout(
+    title = 'Fit Types',
+    xaxis_title = 'Fit Type',
+    yaxis_title = 'Number of Products'
+  )
+
+  return fig
+
 

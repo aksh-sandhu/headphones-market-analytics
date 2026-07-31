@@ -88,7 +88,9 @@ def show():
       st.plotly_chart(fig)
 
     with fit_type :
-      pass
+      fig = charts.fit_type_chart(user_option)
+      st.header(f'Fit Type Products Of {user_option}',text_alignment='center')
+      st.plotly_chart(fig)
 
 
 

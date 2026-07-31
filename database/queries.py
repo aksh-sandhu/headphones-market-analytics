@@ -122,56 +122,68 @@ class overview_query(DB):
 
 class market_insights_query(DB):
 
-  def price_distribution_budget(self):
-    price = []
-    self.mycursor.execute("""
-    SELECT price FROM headphones_aksh.headphones
-    WHERE price IS NOT NULL AND price_tier = 'budget'
-    """)
+  # def price_distribution_budget(self):
+  #   price = []
+  #   self.mycursor.execute("""
+  #   SELECT price FROM headphones_aksh.headphones
+  #   WHERE price IS NOT NULL AND price_tier = 'budget'
+  #   """)
+
+  #   data = self.mycursor.fetchall()
+
+  #   for i in data:
+  #     price.append(i[0])
+
+  #   return price
+
+  # def price_distribution_mid(self):
+  #   price = []
+  #   self.mycursor.execute("""
+  #   SELECT price FROM headphones_aksh.headphones
+  #   WHERE price IS NOT NULL AND price_tier = 'mid range'
+  #   """)
+
+  #   data = self.mycursor.fetchall()
+
+  #   for i in data:
+  #     price.append(i[0])
+
+  #   return price
+
+
+  # def price_distribution_premium(self):
+  #   price = []
+  #   self.mycursor.execute("""
+  #   SELECT price FROM headphones_aksh.headphones
+  #   WHERE price IS NOT NULL AND price_tier = 'premium'
+  #   """)
+  #   data = self.mycursor.fetchall()
+  #   for i in data:
+  #     price.append(i[0])
+  #   return price
+
+  # def price_distribution_luxury(self):
+  #   price = []
+  #   self.mycursor.execute("""
+  #   SELECT price FROM headphones_aksh.headphones
+  #   WHERE price IS NOT NULL AND price_tier = 'luxury'
+  #   """)
+  #   data = self.mycursor.fetchall()
+  #   for i in data:
+  #     price.append(i[0])
+  #   return price
+  def price_tier_count_query(self):
+    self.mycursor.execute('''
+    SELECT COUNT(*) FROM headphones_aksh.headphones
+    GROUP BY price_tier
+    ORDER BY price_tier ASC
+    ''')
 
     data = self.mycursor.fetchall()
+    counts = [i[0] for i in data]
 
-    for i in data:
-      price.append(i[0])
+    return counts[0],counts[1],counts[2],counts[3]
 
-    return price
-
-  def price_distribution_mid(self):
-    price = []
-    self.mycursor.execute("""
-    SELECT price FROM headphones_aksh.headphones
-    WHERE price IS NOT NULL AND price_tier = 'mid range'
-    """)
-
-    data = self.mycursor.fetchall()
-
-    for i in data:
-      price.append(i[0])
-
-    return price
-
-
-  def price_distribution_premium(self):
-    price = []
-    self.mycursor.execute("""
-    SELECT price FROM headphones_aksh.headphones
-    WHERE price IS NOT NULL AND price_tier = 'premium'
-    """)
-    data = self.mycursor.fetchall()
-    for i in data:
-      price.append(i[0])
-    return price
-
-  def price_distribution_luxury(self):
-    price = []
-    self.mycursor.execute("""
-    SELECT price FROM headphones_aksh.headphones
-    WHERE price IS NOT NULL AND price_tier = 'luxury'
-    """)
-    data = self.mycursor.fetchall()
-    for i in data:
-      price.append(i[0])
-    return price
 
 
 # Brand Analysis
@@ -294,7 +306,6 @@ class brand_analysis_query(DB):
 
     FROM headphones_aksh.headphones
     WHERE company = '{user_option}'
-    GROUP BY company
     ''')
 
     data = self.mycursor.fetchall()
@@ -318,6 +329,21 @@ class brand_analysis_query(DB):
     data = self.mycursor.fetchall()
 
     return data[0][0],data[0][1],data[0][2],data[0][3],data[0][4],data[0][5]
+
+  def fit_type_query(self,user_option):
+    self.mycursor.execute(f'''
+    SELECT
+    COUNT(CASE WHEN fit_type = 'in the ear' THEN 1 END) AS in_the_ear,
+    COUNT(CASE WHEN fit_type = 'over the ear' THEN 1 END) AS over_the_ear,
+    COUNT(CASE WHEN fit_type = 'on the ear' THEN 1 END) AS on_the_ear,
+    COUNT(CASE WHEN fit_type = 'open ear' THEN 1 END) AS open_ear
+    FROM headphones_aksh.headphones
+    WHERE company = '{user_option}'
+    ''')
+
+    data = self.mycursor.fetchall()
+
+    return data[0][0],data[0][1],data[0][2],data[0][3]
 
 
 

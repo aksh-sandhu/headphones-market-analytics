@@ -11,7 +11,7 @@ st.set_page_config(
 
 
 
-user_option = st.sidebar.selectbox('Choose',['Overview','Market Insights','Brand Analysis','Product Explorer',"About Dataset"])
+user_option = st.sidebar.selectbox('Choose',['Overview','Market Insights','Brand Analysis',"About Dataset"])
 
 if user_option == 'Overview':
   overview.show()
