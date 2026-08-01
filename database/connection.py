@@ -14,6 +14,7 @@ class DB():
       self.mycursor = self.conn.cursor()
       print('Connection Successful')
 
-    except:
+    except Exception as e:
       print("Connection Error")
+      print(e)
 
