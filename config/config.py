@@ -1,4 +1,6 @@
-HOST = 'your hostname'
-USER = 'your username'
-PASSWORD = 'your password'
-DATABASE = 'your database name'
+import streamlit as st
+
+HOST = st.secrets["HOST"]
+USER = st.secrets["USER"]
+PASSWORD = st.secrets["PASSWORD"]
+DATABASE = st.secrets["DATABASE"]
