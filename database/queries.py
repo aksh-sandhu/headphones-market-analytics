@@ -184,6 +184,59 @@ class market_insights_query(DB):
 
     return counts[0],counts[1],counts[2],counts[3]
 
+  def most_expensive_query(self):
+    self.mycursor.execute('''
+    SELECT company,model, MAX(price) FROM headphones_aksh.headphones
+    GROUP BY company,model
+    ORDER BY MAX(price) DESC LIMIT 10
+    ''')
+    company,model,price,info = [],[],[],[]
+    data = self.mycursor.fetchall()
+
+    for i in data:
+      company.append(i[0])
+      model.append(i[1])
+      price.append(i[2])
+      info.append(i[0] + i[1])
+
+    return info,price
+
+  def bluetooth_distri_query(self):
+    self.mycursor.execute('''
+    SELECT bluetooth,COUNT(*) FROM headphones_aksh.headphones
+    GROUP BY bluetooth
+    HAVING bluetooth IS NOT NULL
+    ''')
+
+    bluetooth,count = [],[]
+
+    data = self.mycursor.fetchall()
+
+    for i in data:
+      bluetooth.append(i[0])
+      count.append(i[1])
+
+
+    return bluetooth,count
+
+  def scatter_plot_query(self):
+
+    self.mycursor.execute('''
+    SELECT price,stars FROM headphones_aksh.headphones
+    WHERE price IS NOT NULL AND stars IS NOT NULL
+    ''')
+    price,rating = [],[]
+    data = self.mycursor.fetchall()
+
+    for i in data:
+      price.append(i[0])
+      rating.append(i[1])
+
+    return price,rating
+
+
+
+
 
 
 # Brand Analysis
@@ -374,4 +427,26 @@ class about_dataset_query(DB):
     data = self.mycursor.fetchall()
     columns = [col[0] for col in self.mycursor.description]
     return pd.DataFrame(data, columns=columns)
+
+  def total_products(self):
+    self.mycursor.execute('''SELECT COUNT(*) FROM headphones_aksh.headphones''')
+
+    data = self.mycursor.fetchone()
+    return data[0]
+
+  def total_brands(self):
+    self.mycursor.execute('''SELECT COUNT(DISTINCT company) FROM headphones_aksh.headphones''')
+
+    data = self.mycursor.fetchone()
+    return data[0]
+
+  def total_columns(self):
+    self.mycursor.execute('''
+    SELECT COUNT(*) AS total_columns
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA = 'headphones_aksh'
+    AND TABLE_NAME = 'headphones'
+    ''')
+    data = self.mycursor.fetchone()
+    return data[0]
 

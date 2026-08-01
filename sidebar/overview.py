@@ -12,7 +12,7 @@ overview_query = overview_query()
 
 def show():
 
-  st.title("Headphones Market Analytics Dashboard (LIVE)")
+  st.title("Headphones Market Analytics Dashboard")
   st.write('1020 Rows · scraped from Smartprix')
   with st.container():
     products,avg_price,avg_rating,brands = st.columns(4,border=True,width="stretch")

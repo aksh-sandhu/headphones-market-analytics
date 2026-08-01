@@ -26,6 +26,29 @@ def show():
   #   st.header('Luxury Tier Distribution Histogram',text_alignment='center')
   #   st.plotly_chart(fig_luxury,key='luxury')
 
-  fig = charts.price_tier_count_chart()
-  st.header('Number of Products In Each Segment',text_alignment='center')
-  st.plotly_chart(fig)
+  with st.container():
+
+    tier_count, most_expensive = st.columns(2,border=True)
+
+    with tier_count:
+      fig_tier_count = charts.price_tier_count_chart()
+      st.header('Number of Products In Each Segment',text_alignment='center')
+      st.plotly_chart(fig_tier_count)
+
+    with most_expensive:
+      fig_most_expensive = charts.most_expensive_chart()
+      st.header('Most Expensive Products',text_alignment='center')
+      st.plotly_chart(fig_most_expensive)
+
+    bluetooth_distri,scatter_plot = st.columns(2,border=True)
+
+    with bluetooth_distri:
+      fig_bluetooth_distri = charts.bluetooth_distri_chart()
+      st.header('Bluetooth Version Chart %')
+      st.plotly_chart(fig_bluetooth_distri)
+
+    with scatter_plot:
+      fig_scatter_plot = charts.scatter_plot_chart()
+      st.header('Price vs Rating Scatter',text_alignment='center')
+      st.plotly_chart(fig_scatter_plot)
+
